@@ -5,7 +5,7 @@ var exports = module.exports = {};
 var bignumber = require('bignumber.js');
 
 
-var determineIDFormat = function (steamID, callback) {
+var determineIncomingFormat = function (steamID, callback) {
 
   if ( steamID.length == 17 ) {
     callback( null, 'steam64ID' );
@@ -18,10 +18,10 @@ var determineIDFormat = function (steamID, callback) {
 };
 
 exports.steam64ID = function( steamID, callback ) {
-  determineIDFormat(steamID, function(err, incomingStyle) {
+  determineIncomingFormat(steamID, function(err, IDFormat) {
     var steam64ID = '';
 
-    if ( incomingStyle == 'steam3ID' ) {
+    if ( IDFormat == 'steam3ID' ) {
 
       steamID = steamID.replace('[U:1:', '');
       steamID.substring(0, steamID.length - 1);
@@ -31,7 +31,7 @@ exports.steam64ID = function( steamID, callback ) {
 
       callback( null, steam64ID );
 
-    } else if ( incomingStyle == 'steam32ID' ) {
+    } else if ( IDFormat == 'steam32ID' ) {
 
       var middleNumber = steamID.substring(8, 9);
      
@@ -46,7 +46,7 @@ exports.steam64ID = function( steamID, callback ) {
       steam64ID = steamID.c[0].toString() + steamID.c[1].toString();
       callback( null, steam64ID);
 
-    } else if ( incomingStyle == 'steam64ID' ) {
+    } else if ( IDFormat == 'steam64ID' ) {
       
       callback( null, steamID);
     
@@ -55,12 +55,12 @@ exports.steam64ID = function( steamID, callback ) {
 };
 
 exports.steam32ID = function( steamID, callback ) {
-  determineIDFormat(steamID, function(err, incomingStyle) {
+  determineIncomingFormat(steamID, function(err, IDFormat) {
 
     var steam32ID = '';
     var middleNumber = '';
 
-    if ( incomingStyle == 'steam64ID' ) {
+    if ( IDFormat == 'steam64ID' ) {
       
       steam32ID = new bignumber(steamID).minus('76561197960265728')
 
@@ -72,7 +72,7 @@ exports.steam32ID = function( steamID, callback ) {
 
       callback(null, steam32ID);
     
-    } else if ( incomingStyle == 'steam3ID' ) {
+    } else if ( IDFormat == 'steam3ID' ) {
     
       exports.steam64ID( steamID, function(err, steam64ID) {
         exports.steam32ID( steam64ID, function(err, steam32ID) {
@@ -82,7 +82,7 @@ exports.steam32ID = function( steamID, callback ) {
         });
       });
     
-    } else if ( incomingStyle == 'steam32ID' ) {
+    } else if ( IDFormat == 'steam32ID' ) {
 
       callback( null, steamID );
 
@@ -91,8 +91,8 @@ exports.steam32ID = function( steamID, callback ) {
 };
 
 exports.steam3ID = function( steamID, callback ) {
-  determineIDFormat(steamID, function(err, incomingStyle) {
-    if ( incomingStyle == 'steam64ID' ) {
+  determineIncomingFormat(steamID, function(err, IDFormat) {
+    if ( IDFormat == 'steam64ID' ) {
       var steam3ID = '';
 
       if ( steamID.toString().length == 17 ) {
@@ -104,7 +104,7 @@ exports.steam3ID = function( steamID, callback ) {
 
       }
     
-    } else if ( incomingStyle == 'steam32ID' ) {
+    } else if ( IDFormat == 'steam32ID' ) {
 
       exports.steam64ID(steamID, function(err, steam64ID) {
         exports.steam3ID(steam64ID, function(err, steam3ID) {
@@ -114,7 +114,7 @@ exports.steam3ID = function( steamID, callback ) {
         });
       });
 
-    } else if ( incomingStyle == 'steam3ID') {
+    } else if ( IDFormat == 'steam3ID') {
 
       callback( null, steamID );
 
