@@ -34,5 +34,11 @@ convertTo.steam32ID('76561197982486517', function(err, steam32ID) {
 
 ---
 
+# Contribute
+
+Pull requests are welcomed and encouraged!
+
+--
+
 If you have any questions, suggestions, or bugs reports please feel free to contact me at alexbarkell@gmail.com
 
