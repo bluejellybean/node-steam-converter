@@ -2,7 +2,7 @@
 
 ```node-steam-converter``` is a library for node/io.js written in javascript. It converts any valid steamID to any other valid steamID.
 
-# Installation
+# Installationss
 
 ```
 npm install node-steam-converter
