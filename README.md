@@ -22,7 +22,7 @@ convertTo.steam3ID('STEAM_0:1:11110394', function(err, steam3ID) {
   //[U:1:22220789]
   console.log(err, steam3ID);
 });
-
+s
 convertTo.steam32ID('76561197982486517', function(err, steam32ID) {
   //STEAM_0:1:11110394
   console.log(err, steam32ID);
