@@ -13,6 +13,8 @@ var determineIncomingFormat = function (steamID, callback) {
     callback( null, 'steam3ID' );
   } else if ( steamID.substring(0, 8) == 'STEAM_0:') {
     callback( null, 'steam32ID' );
+  } else {
+    callback(new Error('invalid input format'))
   }
 
 };

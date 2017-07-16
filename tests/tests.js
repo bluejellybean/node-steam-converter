@@ -63,7 +63,13 @@ describe('node-steam-conversions', function(){
         assert.equal('[U:1:22220789]', steam3ID);
       });
     })
-
+  })
+  describe('error handling', function() {
+    it('should return error when provided with invalid input', function() {
+      convertTo.steam64ID('abc', function(err, steam64ID) {
+        assert.equal(new Error('invalid input format'));
+      })
+    })
   })
 
 });
