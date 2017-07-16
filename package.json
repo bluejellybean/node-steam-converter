@@ -17,8 +17,8 @@
     "time-grunt": "^1.2.1"
   },
   "dependencies": {
-    "bignumber.js": "^2.0.7"
+    "bignumber.js": "^4.0.2"
   },
-  "license" : "GPL-2.0",
+  "license": "GPL-2.0",
   "author": "bluejellybean"
 }
