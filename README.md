@@ -11,23 +11,25 @@ npm install node-steam-converter
 # Examples
 
 ```
-var convertTo = require('node-steam-converter');
+const convertTo = require('node-steam-converter');
+try {
 
-convertTo.steam64ID('76561197982486517', function(err, steam64ID) {
-  //76561197982486517
-  console.log(err, steam64ID);
-});
+    const converted = convertTo.eachConversion('76561197982486517');
+    // -> {
+              '3ID': '[U:1:22220789]',
+              '32ID': 'STEAM_0:1:11110394',
+              '64ID':'76561197982486517'
+          }
 
-convertTo.steam3ID('STEAM_0:1:11110394', function(err, steam3ID) {
-  //[U:1:22220789]
-  console.log(err, steam3ID);
-});
-
-convertTo.steam32ID('76561197982486517', function(err, steam32ID) {
-  //STEAM_0:1:11110394
-  console.log(err, steam32ID);
-});
-
+    const steam64ID = convertTo.steam64ID('76561197982486517');
+    // -> 76561197982486517
+    const steam3ID = convertTo.steam3ID('STEAM_0:1:11110394');
+    // -> [U:1:22220789]
+    const steam32ID = convertTo.steam32ID('76561197982486517');
+    // -> STEAM_0:1:11110394
+} catch (err) {
+    console.log(err);
+}
 ```
 
 
@@ -40,5 +42,5 @@ Pull requests are welcomed and encouraged!
 
 --
 
-If you have any questions, suggestions, or bugs reports please feel free to contact me at alexbarkell@gmail.com or open an issue.
+If you have any questions, suggestions, or bugs reports please feel free to open an issue.
 
