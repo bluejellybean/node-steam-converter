@@ -1,7 +1,4 @@
 'use strict';
-
-var exports = module.exports = {};
-
 function determineIncomingFormat ( steamID ) {
   try {
     if ( steamID.length == 17 ) {
@@ -18,17 +15,16 @@ function determineIncomingFormat ( steamID ) {
   }
 
 };
-
-exports.eachConversion = function(steamID) {
+export default {
+ eachConversion (steamID) {
   determineIncomingFormat(steamID);
   return {
     '3ID': this.steam3ID(steamID),
     '32ID': this.steam32ID(steamID),
     '64ID': this.steam64ID(steamID)
   }
-}
-
-exports.steam64ID = function( steamID  ) {
+},
+steam64ID( steamID  ) {
   const IDFormat = determineIncomingFormat(steamID);
     var steam64ID = '';
 
@@ -63,9 +59,8 @@ exports.steam64ID = function( steamID  ) {
       
     return steamID; 
     }
-};
-
-exports.steam32ID = function( steamID ) {
+},
+steam32ID( steamID ) {
   const IDFormat = determineIncomingFormat(steamID);
 
     var steam32ID = '';
@@ -83,15 +78,14 @@ exports.steam32ID = function( steamID ) {
 
    
     } else if ( IDFormat == 'steam3ID' ) {
-      const steam64ID = exports.steam64ID( steamID);
-      const steam32ID = exports.steam32ID( steam64ID);
+      const steam64ID = this.steam64ID( steamID);
+      const steam32ID = this.steam32ID( steam64ID);
       return steam32ID;    
     } else if ( IDFormat == 'steam32ID' ) {
       return steamID;
     }
-};
-
-exports.steam3ID = function( steamID ) {
+},
+steam3ID( steamID ) {
   const IDFormat = determineIncomingFormat(steamID);
   console.log('watf', steamID, IDFormat)
   if ( IDFormat == 'steam64ID' ) {
@@ -104,10 +98,11 @@ exports.steam3ID = function( steamID ) {
       return steam3ID;
     }
   } else if ( IDFormat == 'steam32ID' ) {
-    const steam64ID = exports.steam64ID(steamID);
-    const steam3ID = exports.steam3ID(steam64ID);
+    const steam64ID = this.steam64ID(steamID);
+    const steam3ID = this.steam3ID(steam64ID);
     return steam3ID;
   } else if ( IDFormat == 'steam3ID') {
     return steamID;
   }
-};
+}
+}
