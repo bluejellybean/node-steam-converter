@@ -11,7 +11,8 @@ npm install node-steam-converter
 # Examples
 
 ```
-const convertTo = require('node-steam-converter');
+import convertTo from node-steam-converter;
+
 try {
 
     const converted = convertTo.eachConversion('76561197982486517');

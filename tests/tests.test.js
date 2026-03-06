@@ -1,6 +1,6 @@
-var assert = require("assert");
-var convertTo = require('../index.js');
-
+import { strict as assert } from 'node:assert';
+import { describe, it } from 'node:test';
+import convertTo from '../index.mjs';
 
 describe('node-steam-conversions', function(){
   describe('eachConversion', function() {
