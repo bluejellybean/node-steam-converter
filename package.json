@@ -1,6 +1,6 @@
 {
   "name": "node-steam-converter",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "private": false,
   "description": "convert any steamIDs to any other steamIDs",
   "repository": {

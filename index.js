@@ -5,22 +5,25 @@ var exports = module.exports = {};
 var bignumber = require('bignumber.js');
 
 
-var determineIncomingFormat = function (steamID, callback) {
-
-  if ( steamID.length == 17 ) {
-    callback( null, 'steam64ID' );
-  } else if ( steamID.substring(0, 3) == '[U:' ) {
-    callback( null, 'steam3ID' );
-  } else if ( steamID.substring(0, 8) == 'STEAM_0:') {
-    callback( null, 'steam32ID' );
-  } else {
-    callback(new Error('invalid input format'))
+function determineIncomingFormat ( steamID ) {
+  try {
+    if ( steamID.length == 17 ) {
+      return 'steam64ID';
+    } else if ( steamID.substring(0, 3) == '[U:' ) {
+      return 'steam3ID';
+    } else if ( steamID.substring(0, 8) == 'STEAM_0:') {
+      return 'steam32ID';
+    } else {
+      new Error('invalid input format')
+    }
+  } catch (err) {
+     new Error('invalid input format')
   }
 
 };
 
-exports.steam64ID = function( steamID, callback ) {
-  determineIncomingFormat(steamID, function(err, IDFormat) {
+exports.steam64ID = function( steamID  ) {
+  const IDFormat = determineIncomingFormat(steamID);
     var steam64ID = '';
 
     if ( IDFormat == 'steam3ID' ) {
@@ -31,7 +34,7 @@ exports.steam64ID = function( steamID, callback ) {
 
       steam64ID = '765' + (parseInt(steamID) + 61197960265728);
 
-      callback( null, steam64ID );
+     return steam64ID;
 
     } else if ( IDFormat == 'steam32ID' ) {
 
@@ -46,18 +49,17 @@ exports.steam64ID = function( steamID, callback ) {
       steamID = new bignumber(steamID).plus(additionValue);
 
       steam64ID = steamID.c[0].toString() + steamID.c[1].toString();
-      callback( null, steam64ID);
+      return steam64ID;
 
     } else if ( IDFormat == 'steam64ID' ) {
       
-      callback( null, steamID);
+      return steamID;
     
     }
-  });
 };
 
-exports.steam32ID = function( steamID, callback ) {
-  determineIncomingFormat(steamID, function(err, IDFormat) {
+exports.steam32ID = function( steamID ) {
+  const IDFormat = determineIncomingFormat(steamID);
 
     var steam32ID = '';
     var middleNumber = '';
@@ -72,54 +74,34 @@ exports.steam32ID = function( steamID, callback ) {
 
       steam32ID = 'STEAM_0:' + middleNumber + ':' + parseInt(steam32ID);
 
-      callback(null, steam32ID);
+      return steam32ID;
     
     } else if ( IDFormat == 'steam3ID' ) {
-    
-      exports.steam64ID( steamID, function(err, steam64ID) {
-        exports.steam32ID( steam64ID, function(err, steam32ID) {
-
-          callback( err, steam32ID )
-
-        });
-      });
-    
+      const steam64ID = exports.steam64ID( steamID);
+      const steam32ID = exports.steam32ID( steam64ID);
+      return steam32ID;    
     } else if ( IDFormat == 'steam32ID' ) {
-
-      callback( null, steamID );
-
+      return steamID;
     }
-  });
 };
 
-exports.steam3ID = function( steamID, callback ) {
-  determineIncomingFormat(steamID, function(err, IDFormat) {
-    if ( IDFormat == 'steam64ID' ) {
-      var steam3ID = '';
+exports.steam3ID = function( steamID ) {
+  const IDFormat = determineIncomingFormat(steamID);
+  console.log('watf', steamID, IDFormat)
+  if ( IDFormat == 'steam64ID' ) {
+    var steam3ID = '';
 
-      if ( steamID.toString().length == 17 ) {
+    if ( steamID.toString().length == 17 ) {
 
-        steam3ID = steamID.substring( steamID, 3 ) - 61197960265728;
-        steam3ID = '[U:1:' + steam3ID.toString() + ']';
-
-        callback ( null, steam3ID );
-
-      }
-    
-    } else if ( IDFormat == 'steam32ID' ) {
-
-      exports.steam64ID(steamID, function(err, steam64ID) {
-        exports.steam3ID(steam64ID, function(err, steam3ID) {
-
-          callback( err, steam3ID );
-
-        });
-      });
-
-    } else if ( IDFormat == 'steam3ID') {
-
-      callback( null, steamID );
-
+      steam3ID = steamID.substring( steamID, 3 ) - 61197960265728;
+      steam3ID = '[U:1:' + steam3ID.toString() + ']';
+      return steam3ID;
     }
-  });
+  } else if ( IDFormat == 'steam32ID' ) {
+    const steam64ID = exports.steam64ID(steamID);
+    const steam3ID = exports.steam3ID(steam64ID);
+    return steam3ID;
+  } else if ( IDFormat == 'steam3ID') {
+    return steamID;
+  }
 };
