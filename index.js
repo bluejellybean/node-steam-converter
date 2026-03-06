@@ -2,9 +2,6 @@
 
 var exports = module.exports = {};
 
-var bignumber = require('bignumber.js');
-
-
 function determineIncomingFormat ( steamID ) {
   try {
     if ( steamID.length == 17 ) {
@@ -25,9 +22,9 @@ function determineIncomingFormat ( steamID ) {
 exports.eachConversion = function(steamID) {
   determineIncomingFormat(steamID);
   return {
-          '3ID': this.steam3ID(steamID),
-          '32ID': this.steam32ID(steamID),
-          '64ID': this.steam64ID(steamID)
+    '3ID': this.steam3ID(steamID),
+    '32ID': this.steam32ID(steamID),
+    '64ID': this.steam64ID(steamID)
   }
 }
 
@@ -45,25 +42,26 @@ exports.steam64ID = function( steamID  ) {
 
      return steam64ID;
 
-    } else if ( IDFormat == 'steam32ID' ) {
+    } else if (IDFormat === 'steam32ID') {
+      const parts = steamID.split(':');
+      if (parts.length !== 3 || parts[0] !== 'STEAM_0') {
+        throw new Error('Invalid SteamID32 format');
+      }
 
-      var middleNumber = steamID.substring(8, 9);
-     
-      steamID = steamID.replace('STEAM_0:1:', '');
-      steamID = steamID.replace('STEAM_0:0:', '');
+      const y = Number(parts[1]);
+      const z = Number(parts[2]);
 
-      steamID = new bignumber(steamID).times(2);
+      if (!Number.isInteger(y) || y < 0 || y > 1 || !Number.isInteger(z) || z < 0) {
+        throw new Error('Invalid SteamID32 values');
+      }
 
-      var additionValue = new bignumber('76561197960265728').plus(middleNumber);
-      steamID = new bignumber(steamID).plus(additionValue);
+      const accountId = BigInt(z) * 2n + BigInt(y);
+      const steam64 = 76561197960265728n + accountId;
 
-      steam64ID = steamID.c[0].toString() + steamID.c[1].toString();
-      return steam64ID;
-
+      return steam64.toString();
     } else if ( IDFormat == 'steam64ID' ) {
       
-      return steamID;
-    
+    return steamID; 
     }
 };
 
@@ -73,18 +71,17 @@ exports.steam32ID = function( steamID ) {
     var steam32ID = '';
     var middleNumber = '';
 
-    if ( IDFormat == 'steam64ID' ) {
-      
-      steam32ID = new bignumber(steamID).minus('76561197960265728')
+    if (IDFormat === 'steam64ID') {
+      const steam64 = BigInt(steamID);
+      const universeBase = 76561197960265728n;
 
-      steam32ID = steam32ID / 2
+      const accountId = steam64 - universeBase;
+      const middleDigit = Number(accountId % 2n);           // 0 or 1
+      const authServer = Number(accountId / 2n);            // integer division
 
-      middleNumber = new bignumber(steamID).modulo(2)
+      return `STEAM_0:${middleDigit}:${authServer}`;
 
-      steam32ID = 'STEAM_0:' + middleNumber + ':' + parseInt(steam32ID);
-
-      return steam32ID;
-    
+   
     } else if ( IDFormat == 'steam3ID' ) {
       const steam64ID = exports.steam64ID( steamID);
       const steam32ID = exports.steam32ID( steam64ID);

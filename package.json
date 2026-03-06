@@ -13,9 +13,7 @@
   "devDependencies": {
     "mocha": "^11.7.5"
   },
-  "dependencies": {
-    "bignumber.js": "^10.0.2"
-  },
+  "dependencies": {},
   "license": "GPL-2.0",
   "author": "bluejellybean"
 }
