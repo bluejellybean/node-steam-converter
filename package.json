@@ -11,7 +11,7 @@
     "test": "mocha tests/"
   },
   "devDependencies": {
-    "mocha": "^2.3.2"
+    "mocha": "^11.7.5"
   },
   "dependencies": {
     "bignumber.js": "^4.0.2"
