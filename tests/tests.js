@@ -3,6 +3,45 @@ var convertTo = require('../index.js');
 
 
 describe('node-steam-conversions', function(){
+  describe('eachConversion', function() {
+    it('should should return each conversion when given the 64ID', function(){
+      let conversions = convertTo.eachConversion('76561197982486517');
+      assert.deepEqual(conversions,
+        {
+          '3ID': '[U:1:22220789]',
+          '32ID': 'STEAM_0:1:11110394',
+          '64ID':'76561197982486517'
+        }
+      );
+    }),
+    it('should should return each conversion when given the 32ID', function(){
+      let conversions = convertTo.eachConversion('STEAM_0:1:11110394');
+      assert.deepEqual(conversions,
+        {
+          '3ID': '[U:1:22220789]',
+          '32ID': 'STEAM_0:1:11110394',
+          '64ID':'76561197982486517'
+        }
+      );
+    }),
+    it('should should return each conversion when given the 3ID', function(){
+      let conversions = convertTo.eachConversion('[U:1:22220789]');
+      assert.deepEqual(conversions,
+        {
+          '3ID': '[U:1:22220789]',
+          '32ID': 'STEAM_0:1:11110394',
+          '64ID':'76561197982486517'
+        }
+      );
+    }),
+    it('should return error when provided with invalid input', function(){
+      try {
+        let conversions = convertTo.eachConversion('');
+      } catch (err) {
+        assert.equal(err, new Error('invalid input format'));
+      }
+    })
+  })
 
   describe('steam32ID', function(){
     it('should should return the 32ID when given the 64ID', function(){

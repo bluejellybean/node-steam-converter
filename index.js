@@ -22,6 +22,15 @@ function determineIncomingFormat ( steamID ) {
 
 };
 
+exports.eachConversion = function(steamID) {
+  determineIncomingFormat(steamID);
+  return {
+          '3ID': this.steam3ID(steamID),
+          '32ID': this.steam32ID(steamID),
+          '64ID': this.steam64ID(steamID)
+  }
+}
+
 exports.steam64ID = function( steamID  ) {
   const IDFormat = determineIncomingFormat(steamID);
     var steam64ID = '';
